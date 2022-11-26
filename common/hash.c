@@ -52,6 +52,9 @@ const YH_INTERNAL EVP_MD *get_hash(hash_t hash) {
     case _SHA256:
       return EVP_sha256();
 
+    case _KECCAK256:
+      return EVP_sha256();
+
     case _SHA384:
       return EVP_sha384();
 
@@ -74,6 +77,9 @@ LPCWSTR YH_INTERNAL get_hash(hash_t hash) {
       return BCRYPT_SHA1_ALGORITHM;
 
     case _SHA256:
+      return BCRYPT_SHA256_ALGORITHM;
+
+    case _KECCAK256:
       return BCRYPT_SHA256_ALGORITHM;
 
     case _SHA384:

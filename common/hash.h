@@ -35,6 +35,7 @@ typedef enum {
   _NONE,
   _SHA1,
   _SHA256,
+  _KECCAK256,
   _SHA384,
   _SHA512,
 } hash_t;
