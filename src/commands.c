@@ -2215,6 +2215,7 @@ int yh_com_sign_ecdsa(yubihsm_context *ctx, Argument *argv, cmd_format in_fmt,
   size_t response_len = sizeof(response);
 
   int hash = 0;
+  bool skip_hashing = false;
 
   switch (argv[2].a) {
     case YH_ALGO_EC_ECDSA_SHA1:
@@ -2223,6 +2224,11 @@ int yh_com_sign_ecdsa(yubihsm_context *ctx, Argument *argv, cmd_format in_fmt,
 
     case YH_ALGO_EC_ECDSA_SHA256:
       hash = _SHA256;
+      break;
+
+    case YH_ALGO_EC_ECDSA_KECCAK256:
+      hash = _KECCAK256;
+      skip_hashing = true;
       break;
 
     case YH_ALGO_EC_ECDSA_SHA384:
@@ -2238,13 +2244,17 @@ int yh_com_sign_ecdsa(yubihsm_context *ctx, Argument *argv, cmd_format in_fmt,
       return -1;
   }
 
-  if (hash_bytes(argv[3].x, argv[3].len, hash, data, &data_len) == false) {
-    fprintf(stderr, "Unable to hash file\n");
-    return -1;
+  yh_rc yrc = YHR_SUCCESS;
+  if (skip_hashing == true) {
+    yrc = yh_util_sign_ecdsa(argv[0].e, argv[1].w, argv[3].x, argv[3].len, response, &response_len);
+  } else {
+    if (hash_bytes(argv[3].x, argv[3].len, hash, data, &data_len) == false) {
+      fprintf(stderr, "Unable to hash file\n");
+      return -1;
+    }
+    yrc = yh_util_sign_ecdsa(argv[0].e, argv[1].w, data, data_len, response, &response_len);
   }
 
-  yh_rc yrc = yh_util_sign_ecdsa(argv[0].e, argv[1].w, data, data_len, response,
-                                 &response_len);
   if (yrc != YHR_SUCCESS) {
     fprintf(stderr, "Failed to sign data with ecdsa: %s\n", yh_strerror(yrc));
     return -1;

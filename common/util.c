@@ -442,6 +442,7 @@ bool algo2type(yh_algorithm algorithm, yh_object_type *type) {
     case YH_ALGO_RSA_OAEP_SHA384:
     case YH_ALGO_RSA_OAEP_SHA512:
     case YH_ALGO_EC_ECDSA_SHA256:
+    case YH_ALGO_EC_ECDSA_KECCAK256:
     case YH_ALGO_EC_ECDSA_SHA384:
     case YH_ALGO_EC_ECDSA_SHA512:
     case YH_ALGO_EC_ED25519:
